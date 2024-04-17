@@ -1,0 +1,65 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.3'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'io.mhe'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+	maven {
+		url "https://repo.mhe.io/artifactory/maven-mirror/"
+		credentials {
+			username = 'svc_docker_read_only'
+			password = '0xDockerReadOnly'
+		}
+		metadataSources {
+			mavenPom()
+			artifact()
+		}
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
+	//runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+	implementation 'com.oracle.database.jdbc:ojdbc8:19.6.0.0'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation group: 'joda-time', name: 'joda-time', version:'2.12.5'
+	implementation group: 'commons-httpclient', name: 'commons-httpclient', version:'3.1'
+	implementation group: 'commons-collections', name: 'commons-collections', version:'3.2.2'
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
+
+	// https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sqs
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-sqs', version: '1.12.692'
+	// https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-sts
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-sts', version: '1.12.692'
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
+
+	implementation group: 'io.mhe.highered.connect.commons', name: 'amazons3-client', version:'4.16.3064-H-SNAPSHOT'
+	implementation (group: 'io.mhe.highered.connect.commons', name: 'amazon-sqs-client', version:'4.16.3064-H-SNAPSHOT') {
+		exclude group: "com.google.code.gson", module: "gson"
+		exclude group: "com.fasterxml.jackson.core"
+		exclude group: "commons-lang", module: "commons-lang"
+		exclude group: "commons-codec", module: "commons-codec"
+	}
+
+	// https://mvnrepository.com/artifact/com.google.guava/guava
+	implementation group: 'com.google.guava', name: 'guava', version: '33.1.0-jre'
+
+
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
